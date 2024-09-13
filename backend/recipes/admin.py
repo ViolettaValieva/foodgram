@@ -1,8 +1,8 @@
 from django.contrib import admin
 
 from core.constants import INGREDIENT_MIN_AMOUNT
-from .models import (Favorite, Ingredient, Recipe,
-                     RecipeIngredient, ShoppingCart, Tag)
+from .models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                     ShoppingCart, Tag)
 
 
 class RecipeIngredientInline(admin.TabularInline):

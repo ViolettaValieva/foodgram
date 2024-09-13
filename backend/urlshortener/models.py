@@ -1,9 +1,8 @@
 from django.db import models
 from django.utils.crypto import get_random_string
 
-from core.constants import (URL_MAX_LENGTH,
-                            SHORT_URL_LENGTH,
-                            SHORT_URL_MAX_LENGTH)
+from core.constants import (SHORT_URL_LENGTH, SHORT_URL_MAX_LENGTH,
+                            URL_MAX_LENGTH)
 
 
 class ShortURL(models.Model):

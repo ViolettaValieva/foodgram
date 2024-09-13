@@ -1,10 +1,10 @@
 from django.db import transaction
 from djoser.serializers import UserCreateSerializer
 from drf_base64.fields import Base64ImageField
-from rest_framework import serializers
 
-from recipes.models import (Favorite, Ingredient, Recipe,
-                            RecipeIngredient, ShoppingCart, Tag)
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tag)
+from rest_framework import serializers
 from urlshortener.models import ShortURL
 from users.models import Subscribe, User
 

@@ -11,18 +11,16 @@ from rest_framework.reverse import reverse
 
 from .filters import IngredientFilterSet, RecipeFilter
 from .permissions import IsAuthorOrReadOnly
-from .serializers import (
-    AvatarSerializer, IngredientSerializer, RecipeCreateSerializer,
-    RecipeSerializer, SimpleRecipeSerializer, TagSerializer,
-    ShortURLSerializer, UserSerializer, UserCreateSerializer,
-    SubscribeSerializer
-)
-from core.constants import FILE_NAME
-from recipes.models import (
-    Favorite, Ingredient, Recipe, RecipeIngredient, ShoppingCart, Tag
-)
+from .serializers import (AvatarSerializer, IngredientSerializer,
+                          RecipeCreateSerializer, RecipeSerializer,
+                          ShortURLSerializer, SimpleRecipeSerializer,
+                          SubscribeSerializer, TagSerializer,
+                          UserCreateSerializer, UserSerializer)
 from urlshortener.models import ShortURL
 from users.models import Subscribe, User
+from core.constants import FILE_NAME
+from recipes.models import (Favorite, Ingredient, Recipe, RecipeIngredient,
+                            ShoppingCart, Tag)
 
 
 class UserViewSet(DjoserUserViewSet):
@@ -103,7 +101,7 @@ class UserViewSet(DjoserUserViewSet):
                 return Response(serializer.data, status=status.HTTP_200_OK)
             return Response(
                 serializer.errors, status=status.HTTP_400_BAD_REQUEST
-            )        
+            )
         if request.method == 'DELETE':
             if user.avatar:
                 user.avatar.delete(save=False)

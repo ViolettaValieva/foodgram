@@ -1,14 +1,9 @@
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
-from core.constants import (
-    COOKING_MIN_TIME,
-    INGREDIENT_MAX_LENGTH,
-    INGREDIENT_MIN_AMOUNT,
-    MAX_POSITIVE_VALUE,
-    RECIPE_MAX_LENGTH,
-    TAG_MAX_LENGTH,
-)
+from core.constants import (COOKING_MIN_TIME, INGREDIENT_MAX_LENGTH,
+                            INGREDIENT_MIN_AMOUNT, MAX_POSITIVE_VALUE,
+                            RECIPE_MAX_LENGTH, TAG_MAX_LENGTH)
 from core.models import AuthorCreatedModel, AuthorRecipeModel
 
 
