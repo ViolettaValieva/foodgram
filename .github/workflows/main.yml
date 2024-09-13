@@ -103,7 +103,7 @@ jobs:
       - name: Push to DockerHub
         uses: docker/build-push-action@v4
         with:
-          context: ./infra/nginx/
+          context: ./infra/
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/foodgram_gateway:latest
 
