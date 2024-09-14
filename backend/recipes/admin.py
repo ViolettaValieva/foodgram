@@ -34,13 +34,12 @@ class TagAdmin(admin.ModelAdmin):
 class RecipeAdmin(admin.ModelAdmin):
     """Админка Рецептов."""
 
-    list_display = ('name', 'author')
+    list_display = ('name', 'author', 'in_favorites',)
     list_display_links = ('name', 'author')
     search_fields = ('name', 'author__username')
     search_help_text = 'Поиск по названию рецепта или по автору'
     filter_horizontal = ('tags',)
     list_filter = ('tags',)
-    readonly_fields = ('in_favorites',)
     empty_value_display = 'Не задано'
     inlines = (RecipeIngredientInline,)
     fieldsets = (
@@ -49,7 +48,7 @@ class RecipeAdmin(admin.ModelAdmin):
             {
                 'fields': (
                     'author',
-                    ('name', 'cooking_time', 'in_favorites'),
+                    ('name', 'cooking_time'),
                     'text',
                     'image',
                     'tags',

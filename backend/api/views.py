@@ -9,7 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 
-from .filters import IngredientFilterSet, RecipeFilter
+from .filters import IngredientFilter, RecipeFilter
 from .permissions import IsAuthorOrReadOnly
 from .serializers import (AvatarSerializer, IngredientSerializer,
                           RecipeCreateSerializer, RecipeSerializer,
@@ -120,7 +120,7 @@ class IngredientViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = IngredientSerializer
     pagination_class = None
     filter_backends = (DjangoFilterBackend,)
-    filterset_class = IngredientFilterSet
+    filterset_class = IngredientFilter
 
 
 class TagViewSet(viewsets.ReadOnlyModelViewSet):
@@ -240,7 +240,8 @@ class RecipeViewSet(viewsets.ModelViewSet):
         short_url_instance = ShortURL.objects.get_or_create(
             original_url=request.build_absolute_uri(
                 reverse('api:recipes-detail', kwargs={'pk': pk})
-            ))[0]
+            ).replace('/api', '')
+        )[0]
         serializer = ShortURLSerializer(
             short_url_instance, context={'request': request}
         )

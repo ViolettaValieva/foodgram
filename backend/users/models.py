@@ -1,3 +1,4 @@
+from django.core.exceptions import ValidationError
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
@@ -49,6 +50,10 @@ class Subscribe(AuthorModel):
                 name='unique_subscribe'
             )
         ]
+
+    def clean(self):
+        if self.user == self.author:
+            raise ValidationError('Нельзя подписаться на самого себя.')
 
     def __str__(self):
         return f'{self.user.username} подписан на {self.author.username}'

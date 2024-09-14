@@ -69,8 +69,7 @@ class Recipe(AuthorCreatedModel):
     )
     image = models.ImageField(
         'Картинка',
-        upload_to='recipes/',
-        blank=True
+        upload_to='recipes/'
     )
     ingredients = models.ManyToManyField(
         Ingredient,
