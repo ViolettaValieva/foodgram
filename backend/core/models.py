@@ -21,10 +21,10 @@ class UserRecipeModel(models.Model):
         abstract = True
         constraints = (
             models.UniqueConstraint(
-                fields=['user', 'recipe'],
+                fields=('user', 'recipe'),
                 name='unique_%(class)s'
             ),
         )
 
     def __str__(self):
-        return f'{self.user.username} - {self.recipe.name}'
+        return f'{self._meta.verbose_name} - {self.recipe.name}'

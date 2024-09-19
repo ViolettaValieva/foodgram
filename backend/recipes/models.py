@@ -1,13 +1,13 @@
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
-from django.utils.crypto import get_random_string
 
 from core.constants import (COOKING_MIN_TIME, INGREDIENT_MAX_LENGTH,
                             INGREDIENT_MIN_AMOUNT, MAX_POSITIVE_VALUE,
                             RECIPE_MAX_LENGTH, TAG_MAX_LENGTH,
-                            SHORT_URL_MAX_LENGTH, SHORT_URL_LENGTH)
+                            SHORT_URL_MAX_LENGTH)
 from core.models import UserRecipeModel
+from .services import generate_short_url
 
 
 class Ingredient(models.Model):
@@ -29,7 +29,7 @@ class Ingredient(models.Model):
         verbose_name_plural = 'Ингредиенты'
         constraints = (
             models.UniqueConstraint(
-                fields=['name', 'measurement_unit'],
+                fields=('name', 'measurement_unit'),
                 name='unique_ingredient'
             ),
         )
@@ -119,14 +119,8 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.short_url:
-            self.short_url = self.generate_short_url()
+            self.short_url = generate_short_url()
         super().save(*args, **kwargs)
-
-    def generate_short_url(self):
-        while True:
-            short_url = get_random_string(SHORT_URL_LENGTH)
-            if not Recipe.objects.filter(short_url=short_url).exists():
-                return short_url
 
     def __str__(self):
         return self.name
@@ -147,10 +141,10 @@ class RecipeIngredient(models.Model):
     )
     amount = models.PositiveSmallIntegerField(
         'Количество',
-        validators=[
+        validators=(
             MinValueValidator(INGREDIENT_MIN_AMOUNT),
             MaxValueValidator(MAX_POSITIVE_VALUE),
-        ]
+        )
     )
 
     class Meta:
@@ -159,7 +153,7 @@ class RecipeIngredient(models.Model):
         verbose_name_plural = 'Ингредиенты в рецептах'
         constraints = [
             models.UniqueConstraint(
-                fields=['recipe', 'ingredient'],
+                fields=('recipe', 'ingredient'),
                 name='unique_combination'
             )
         ]

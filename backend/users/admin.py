@@ -18,27 +18,27 @@ class UsersAdmin(UserAdmin):
     list_display_links = ('id', 'username', 'email', 'full_name')
 
     @admin.display(description='Имя фамилия')
-    def full_name(self, obj):
+    def full_name(self, user):
         """Получение полного имени"""
-        return obj.get_full_name()
+        return user.get_full_name()
 
     @admin.display(description='Аватар')
-    def avatar_tag(self, obj):
+    def avatar_tag(self, user):
         """Вывод аватарки пользователя."""
-        if obj.avatar:
-            return mark_safe(f'<img src="{obj.avatar.url}" '
+        if user.avatar:
+            return mark_safe(f'<img src="{user.avatar.url}" '
                              'width="80" height="60">')
         return 'Нет аватара'
 
     @admin.display(description='Кол-во рецептов')
-    def recipe_count(self, obj):
+    def recipe_count(self, user):
         """Количество рецептов."""
-        return obj.recipes.count()
+        return user.recipes.count()
 
     @admin.display(description='Кол-во подписчиков')
-    def subscriber_count(self, obj):
+    def subscriber_count(self, user):
         """Количество подписчиков."""
-        return obj.subscribers.count()
+        return user.followers.count()
 
 
 admin.site.register(Subscribe)

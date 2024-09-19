@@ -33,13 +33,13 @@ class Subscribe(models.Model):
     user = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='subscriptions',
+        related_name='subscribed_to',
         verbose_name='Подписчик'
     )
     author = models.ForeignKey(
         User,
         on_delete=models.CASCADE,
-        related_name='subscribers',
+        related_name='followers',
         verbose_name='Автор'
     )
 
@@ -48,7 +48,7 @@ class Subscribe(models.Model):
         verbose_name_plural = 'Подписки'
         constraints = (
             models.UniqueConstraint(
-                fields=['user', 'author'],
+                fields=('user', 'author'),
                 name='unique_subscribe'
             ),
         )

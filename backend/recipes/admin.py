@@ -60,31 +60,29 @@ class RecipeAdmin(admin.ModelAdmin):
     )
 
     @admin.display(description='В избранном')
-    def in_favorites(self, obj):
+    def in_favorites(self, recipe):
         """Число добавлений этого рецепта в избранное."""
-        return obj.favorites.count()
+        return recipe.favorites.count()
 
     @admin.display(description='Ингредиенты')
-    def get_ingredients(self, obj):
+    def get_ingredients(self, recipe):
         """Вывод ингредиентов."""
-        return ", ".join([
+        return ', '.join([
             f"{ingredient.name} ({ingredient.measurement_unit})"
-            for ingredient in obj.ingredients.all()
+            for ingredient in recipe.ingredients.all()
         ])
 
     @admin.display(description='Теги')
-    def get_tags(self, obj):
+    def get_tags(self, recipe):
         """Вывод тегов."""
-        return ", ".join([tag.name for tag in obj.tags.all()])
+        return ", ".join([tag.name for tag in recipe.tags.all()])
 
     @admin.display(description='Картинка')
-    def image_tag(self, obj):
+    def image_tag(self, recipe):
         """Отображение изображения рецепта."""
-        if obj.image:
-            return mark_safe(
-                f'<img src="{obj.image.url}" width="80" height="60" />'
-            )
-        return 'Нет изображения'
+        return mark_safe(
+            f'<img src="{recipe.image.url}" width="80" height="60" />'
+        )
 
 
 @admin.register(Favorite, ShoppingCart)
