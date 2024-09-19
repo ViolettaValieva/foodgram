@@ -2,34 +2,29 @@ from django.conf import settings
 from django.db import models
 
 
-class AuthorModel(models.Model):
-    """Абстрактная модель Автора."""
+class UserRecipeModel(models.Model):
+    """Абстрактная модель для связи пользователя с рецептом."""
 
-    author = models.ForeignKey(
+    user = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        verbose_name='Автор',
+        verbose_name='Пользователь',
+        related_name='%(class)ss'
     )
-
-    class Meta:
-        abstract = True
-
-
-class AuthorCreatedModel(AuthorModel):
-    """Абстрактная модель Автора и Даты публикации."""
-
-    created_at = models.DateTimeField('Дата публикации', auto_now_add=True)
-
-    class Meta:
-        abstract = True
-
-
-class AuthorRecipeModel(AuthorModel):
-    """Абстрактная модель Автора и Рецепта."""
-
     recipe = models.ForeignKey(
-        'recipes.Recipe', on_delete=models.CASCADE, verbose_name='Рецепт'
+        'Recipe',
+        on_delete=models.CASCADE,
+        verbose_name='Рецепт'
     )
 
     class Meta:
         abstract = True
+        constraints = (
+            models.UniqueConstraint(
+                fields=['user', 'recipe'],
+                name='unique_%(class)s'
+            ),
+        )
+
+    def __str__(self):
+        return f'{self.user.username} - {self.recipe.name}'

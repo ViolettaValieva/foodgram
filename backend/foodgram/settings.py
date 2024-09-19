@@ -26,7 +26,6 @@ INSTALLED_APPS = [
     'core.apps.CoreConfig',
     'recipes.apps.RecipesConfig',
     'users.apps.UsersConfig',
-    'urlshortener.apps.UrlshortenerConfig',
     'api.apps.ApiConfig',
 ]
 
@@ -106,7 +105,7 @@ REST_FRAMEWORK = {
     'DEFAULT_FILTER_BACKENDS': [
         'django_filters.rest_framework.DjangoFilterBackend',
     ],
-    'DEFAULT_PAGINATION_CLASS': 'api.pagination.CustomPaginator',
+    'DEFAULT_PAGINATION_CLASS': 'api.pagination.FoodgramPaginator',
     'SEARCH_PARAM': 'name',
 }
 
@@ -115,7 +114,11 @@ DJOSER = {
     'HIDE_USERS': False,
     'PERMISSIONS': {
         'user_list': ('rest_framework.permissions.AllowAny',)
-    }
+    },
+    'SERIALIZERS': {
+        'user': 'api.serializers.UserSerializer',
+        'current_user': 'api.serializers.UserSerializer',
+    },
 }
 
 LANGUAGE_CODE = 'ru-RU'

@@ -3,7 +3,6 @@ import os
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
-from django.db import IntegrityError
 
 from recipes.models import Ingredient
 
@@ -12,16 +11,18 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         file_path = os.path.join(settings.BASE_DIR, 'ingredients.csv')
-        with open(file_path, 'r', encoding='utf-8') as f:
-            try:
+        try:
+            with open(file_path, 'r', encoding='utf-8') as f:
                 Ingredient.objects.bulk_create(
-                    Ingredient(name=row[0], measurement_unit=row[1])
-                    for row in csv.reader(f)
+                    (Ingredient(name=name, measurement_unit=unit)
+                     for name, unit in csv.reader(f)),
+                    ignore_conflicts=True
                 )
-                self.stdout.write(
-                    self.style.SUCCESS('Successfully added ingredients!')
-                )
-            except IntegrityError:
-                self.stdout.write(
-                    self.style.ERROR('Ingredients already exists!')
-                )
+            self.stdout.write(
+                self.style.SUCCESS('Successfully added ingredients!')
+            )
+
+        except FileNotFoundError:
+            self.stdout.write(self.style.ERROR(f'File not found: {file_path}'))
+        except csv.Error as e:
+            self.stdout.write(self.style.ERROR(f'Error reading CSV file: {e}'))
