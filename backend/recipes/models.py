@@ -119,7 +119,7 @@ class Recipe(models.Model):
 
     def save(self, *args, **kwargs):
         if not self.short_url:
-            self.short_url = generate_short_url()
+            self.short_url = generate_short_url(self.__class__)
         super().save(*args, **kwargs)
 
     def __str__(self):
@@ -151,12 +151,12 @@ class RecipeIngredient(models.Model):
         default_related_name = 'recipe_ingredients'
         verbose_name = 'Ингредиенты в рецепте'
         verbose_name_plural = 'Ингредиенты в рецептах'
-        constraints = [
+        constraints = (
             models.UniqueConstraint(
                 fields=('recipe', 'ingredient'),
                 name='unique_combination'
-            )
-        ]
+            ),
+        )
 
     def __str__(self):
         return (f'{self.recipe.name}: '

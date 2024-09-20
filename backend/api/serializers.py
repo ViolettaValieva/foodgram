@@ -21,7 +21,7 @@ class UserSerializer(DjoserUserSerializer):
     def get_is_subscribed(self, obj):
         user = self.context['request'].user
         return (user.is_authenticated
-                and user.subscribed_to.filter(author=obj).exists())
+                and user.user_subscriptions.filter(author=obj).exists())
 
 
 class AvatarSerializer(serializers.ModelSerializer):
@@ -65,7 +65,7 @@ class SubscribeGETSerializer(UserSerializer):
             try:
                 recipes_limit = int(recipes_limit)
             except ValueError:
-                pass
+                recipes_limit = None
             queryset = queryset[:recipes_limit]
         return SimpleRecipeSerializer(queryset, many=True,
                                       context=self.context).data
@@ -85,7 +85,7 @@ class SubscribePOSTSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError(
                 'Нельзя подписаться на самого себя.'
             )
-        if user.subscribed_to.filter(author=author).exists():
+        if user.user_subscriptions.filter(author=author).exists():
             raise serializers.ValidationError(
                 'Вы уже подписаны на этого автора.'
             )
@@ -154,8 +154,15 @@ class RecipeIngredientCreateSerializer(serializers.ModelSerializer):
     id = serializers.PrimaryKeyRelatedField(
         queryset=Ingredient.objects.all(), source='ingredient'
     )
-    amount = serializers.IntegerField(min_value=INGREDIENT_MIN_AMOUNT,
-                                      max_value=MAX_POSITIVE_VALUE)
+    amount = serializers.IntegerField(
+        min_value=INGREDIENT_MIN_AMOUNT, max_value=MAX_POSITIVE_VALUE,
+        error_messages={
+            'min_value': 'Количество ингредиента должно быть не менее '
+            f'{INGREDIENT_MIN_AMOUNT}.',
+            'max_value': 'Количество ингредиента не может превышать '
+            f'{MAX_POSITIVE_VALUE}.'
+        }
+    )
 
     class Meta:
         model = RecipeIngredient

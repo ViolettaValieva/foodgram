@@ -38,7 +38,7 @@ class UsersAdmin(UserAdmin):
     @admin.display(description='Кол-во подписчиков')
     def subscriber_count(self, user):
         """Количество подписчиков."""
-        return user.followers.count()
+        return user.subscriptions_to_author.count()
 
 
 admin.site.register(Subscribe)

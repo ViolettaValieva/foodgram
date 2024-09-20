@@ -40,7 +40,7 @@ class UserViewSet(DjoserUserViewSet):
     def subscriptions(self, request):
         """Получение списка подписок текущего пользователя."""
         queryset = User.objects.filter(
-            followers__user=request.user
+            subscriptions_to_author__user=request.user
         ).annotate(recipes_count=Count('recipes')).order_by('username')
         page = self.paginate_queryset(queryset)
         serializer = SubscribeGETSerializer(page, many=True,
@@ -114,7 +114,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
     permission_classes = (IsAuthorOrReadOnly,)
     filter_backends = (DjangoFilterBackend,)
     filterset_class = RecipeFilter
-    http_method_names = ['get', 'post', 'patch', 'delete']
+    http_method_names = ('get', 'post', 'patch', 'delete')
 
     def get_queryset(self):
         user = self.request.user
@@ -198,11 +198,9 @@ class RecipeViewSet(viewsets.ModelViewSet):
             url_path='get-link')
     def get_link(self, request, pk=None):
         """Формирование короткой ссылки."""
-        recipe = self.get_object()
-        if not recipe.short_url:
-            recipe.save()
+        recipe = get_object_or_404(Recipe, pk=pk)
         short_url_path = reverse('redirect_to_original', kwargs={
-            'short_url': recipe.short_url}
+            'slug': recipe.short_url}
         )
         short_link = request.build_absolute_uri(short_url_path)
         return Response({'short-link': short_link}, status=status.HTTP_200_OK)
