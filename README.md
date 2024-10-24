@@ -71,5 +71,5 @@ sudo docker compose down
 
 ## Автор
 
-Виолетта Валиева https://github.com/ViolettaValieva
+[ViolettaValieva](https://github.com/ViolettaValieva)
 
